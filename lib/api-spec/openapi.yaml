@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: member-profiles
+    description: CWC member profile submissions
 paths:
   /healthz:
     get:
@@ -24,6 +26,31 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /member-profiles:
+    post:
+      operationId: submitMemberProfile
+      tags: [member-profiles]
+      summary: Submit a CWC member profile
+      description: Saves a private member profile submission. Directory visibility is not enabled unless the member explicitly selects fields.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MemberProfileInput"
+      responses:
+        "201":
+          description: Profile submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MemberProfileReceipt"
+        "400":
+          description: Invalid profile details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +60,77 @@ components:
           type: string
       required:
         - status
+    MemberProfileInput:
+      type: object
+      additionalProperties: false
+      required:
+        - fullName
+        - email
+        - ownsBusiness
+        - directoryFields
+        - contactForOpportunities
+      properties:
+        fullName: { type: string, minLength: 1, maxLength: 160 }
+        preferredName: { type: string, maxLength: 160 }
+        email: { type: string, format: email, maxLength: 320 }
+        phone: { type: string, maxLength: 80 }
+        professionalProfile: { type: string, maxLength: 500 }
+        currentCity: { type: string, maxLength: 160 }
+        currentRole: { type: string, maxLength: 200 }
+        organization: { type: string, maxLength: 200 }
+        industry: { type: string, maxLength: 200 }
+        yearsExperience: { type: string, maxLength: 80 }
+        professionalBio: { type: string, maxLength: 3000 }
+        strengths: { type: string, maxLength: 1500 }
+        areasOfExpertise: { type: string, maxLength: 3000 }
+        certifications: { type: string, maxLength: 2000 }
+        languages: { type: string, maxLength: 1000 }
+        achievements: { type: string, maxLength: 3000 }
+        leadershipExperience: { type: string, maxLength: 3000 }
+        notableProjects: { type: string, maxLength: 3000 }
+        highestDegree: { type: string, maxLength: 300 }
+        relevantTraining: { type: string, maxLength: 3000 }
+        shortTermGoals: { type: string, maxLength: 3000 }
+        longTermVision: { type: string, maxLength: 3000 }
+        developingSkills: { type: string, maxLength: 3000 }
+        communityContribution: { type: string, maxLength: 3000 }
+        opportunitiesSeeking: { type: string, maxLength: 2000 }
+        passionateCauses: { type: string, maxLength: 2000 }
+        ownsBusiness: { type: boolean }
+        businessName: { type: string, maxLength: 200 }
+        productsServices: { type: string, maxLength: 3000 }
+        idealClients: { type: string, maxLength: 2000 }
+        guidingValue: { type: string, maxLength: 1000 }
+        oneThingToKnow: { type: string, maxLength: 1500 }
+        directoryFields:
+          type: array
+          maxItems: 12
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+              - preferredName
+              - currentRole
+              - organization
+              - industry
+              - currentCity
+              - professionalProfile
+              - professionalBio
+              - strengths
+              - areasOfExpertise
+              - businessName
+              - productsServices
+        contactForOpportunities: { type: boolean }
+        expectationsAndRecommendations: { type: string, maxLength: 3000 }
+    MemberProfileReceipt:
+      type: object
+      required: [id, submittedAt]
+      properties:
+        id: { type: string, format: uuid }
+        submittedAt: { type: string, format: date-time }
+    ApiError:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string }
 

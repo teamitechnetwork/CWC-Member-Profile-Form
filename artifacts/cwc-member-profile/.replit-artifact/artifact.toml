@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "CWC Member Profile"
+description = "A guided member profile form for Columbus Women Connect that helps members share their experience, strengths, goals, and interests while controlling directory visibility."
+version = "1.0.0"
+id = "artifacts/cwc-member-profile"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22499
+
+[services.development]
+run = "pnpm --filter @workspace/cwc-member-profile run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/cwc-member-profile", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/cwc-member-profile/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22499"
+BASE_PATH = "/"
