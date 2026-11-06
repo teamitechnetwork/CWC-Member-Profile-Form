@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-// @ts-expect-error The generated runtime includes this hook; workspace declaration output is behind the current API schema.
 import { useSubmitMemberProfile } from '@workspace/api-client-react';
-// @ts-expect-error The source schema includes the new member profile input; declaration output is awaiting regeneration.
 import type { MemberProfileInput } from '@workspace/api-client-react';
 import type { Path, UseFormRegister } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
@@ -79,14 +77,16 @@ function Section({ icon, title, description, children, id }: { icon: ReactNode; 
 
 function SiteHeader() {
   return (
-    <>
-      <header className="site-header">
-        <div className="header-inner">
+    <header className="site-header">
+      <div className="header-inner">
+        <div className="brand-pair" role="group" aria-label="Columbus Women Connect and partner logos">
           <img className="brand-logo" src="/cwc-logo.png" alt="Columbus Women Connect" data-testid="img-cwc-wordmark" />
-          <div className="header-note"><img className="header-mark" src="/cwc-mark.png" alt="" />Member profile</div>
+          <span className="brand-divider" aria-hidden="true" />
+          <img className="partner-logo" src="/cwc-mark.png" alt="Partner organization logo" data-testid="img-partner-logo" />
         </div>
-      </header>
-    </>
+        <div className="header-note">Member profile</div>
+      </div>
+    </header>
   );
 }
 
@@ -94,7 +94,11 @@ function SiteFooter() {
   return (
     <footer className="site-footer">
       <div className="footer-inner">
-        <div className="footer-brand"><img src="/cwc-mark.png" alt="" />Columbus Women Connect</div>
+        <div className="brand-pair footer-brand-pair" role="group" aria-label="Columbus Women Connect and partner logos">
+          <img className="brand-logo" src="/cwc-logo.png" alt="Columbus Women Connect" data-testid="img-footer-cwc-wordmark" />
+          <span className="brand-divider" aria-hidden="true" />
+          <img className="partner-logo" src="/cwc-mark.png" alt="Partner organization logo" data-testid="img-footer-partner-logo" />
+        </div>
         <div className="footer-copy">A community built on connection, generosity, and growth.</div>
       </div>
     </footer>

@@ -1,0 +1,8 @@
+.local
+.cache
+.conversation
+attached_assets
+**/node_modules
+**/dist
+*.log
+.env*
