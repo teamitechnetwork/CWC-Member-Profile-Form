@@ -1,5 +1,14 @@
-import { env } from "node:process";
-import type { CwcMemberFormSubmission, MemberSheetSuccess } from "@workspace/api-zod";
+declare const process: {
+  env: {
+    SHEET_URL?: string;
+    SHEET_SECRET?: string;
+  };
+};
+
+type MemberSheetSuccess = {
+  ok: true;
+  row: number;
+};
 
 export type MemberSheetProxyResult = {
   status: number;
@@ -15,10 +24,10 @@ function getErrorMessage(value: unknown): string | undefined {
 }
 
 export async function submitMemberToSheet(
-  member: CwcMemberFormSubmission,
+  member: unknown,
 ): Promise<MemberSheetProxyResult> {
-  const sheetUrl = env.SHEET_URL;
-  const sheetSecret = env.SHEET_SECRET;
+  const sheetUrl = process.env.SHEET_URL;
+  const sheetSecret = process.env.SHEET_SECRET;
   if (!sheetUrl || !sheetSecret) {
     return {
       status: 503,
