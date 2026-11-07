@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useSubmitMember } from '@workspace/api-client-react';
-import type { CwcMemberFormSubmission, MemberProfileInput, MemberSheetSuccess } from '@workspace/api-client-react';
+import type { CwcMemberFormSubmission, MemberProfileInput } from '@workspace/api-client-react';
 import type { Path, UseFormRegister } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import { ArrowRight, BriefcaseBusiness, Compass, HeartHandshake, Sparkles, UsersRound } from 'lucide-react';
@@ -119,7 +119,7 @@ function SiteFooter() {
   );
 }
 
-function SuccessState({ receipt }: { receipt: MemberSheetSuccess }) {
+function SuccessState() {
   return (
     <main className="success-wrap">
       <div className="success-card" role="status" data-testid="status-submission-success">
@@ -127,7 +127,7 @@ function SuccessState({ receipt }: { receipt: MemberSheetSuccess }) {
         <div className="eyebrow">Profile received</div>
         <h1>Thank you for sharing your story.</h1>
         <p>Your profile has been submitted to Columbus Women Connect. Your voice and perspective help make this community stronger.</p>
-        <div className="receipt"><strong>Submission confirmed</strong>Added to the member sheet in row {receipt.row}.</div>
+        <div className="receipt"><strong>Submission confirmed</strong>Added to the member sheet.</div>
         <p className="success-note">You can close this page. We’re glad you’re here.</p>
       </div>
     </main>
@@ -137,7 +137,7 @@ function SuccessState({ receipt }: { receipt: MemberSheetSuccess }) {
 const steps = ['About you', 'Your experience', 'What’s next', 'Business', 'Connection'];
 
 function MemberProfileForm() {
-  const [receipt, setReceipt] = useState<MemberSheetSuccess | null>(null);
+  const [submitted, setSubmitted] = useState(false);
   const [requestError, setRequestError] = useState('');
   const mutation = useSubmitMember();
   const { register, handleSubmit, watch, formState: { errors } } = useForm<MemberProfileInput>({
@@ -189,7 +189,17 @@ function MemberProfileForm() {
       'What are your expectations of CWC? What recommendations would you like to share?': values.expectationsAndRecommendations?.trim() ?? '',
     };
     mutation.mutate({ data }, {
-      onSuccess: (result: MemberSheetSuccess) => setReceipt(result),
+      onSuccess: (result) => {
+        if (result && result.ok === true) {
+          setSubmitted(true);
+          return;
+        }
+
+        const responseError = result && typeof result === 'object' && 'error' in result
+          ? result.error
+          : undefined;
+        setRequestError(typeof responseError === 'string' ? responseError : 'We couldn’t add your profile to the member sheet. Please try again. Your answers are still here.');
+      },
       onError: (error) => {
         const data = error && typeof error === 'object' && 'data' in error
           ? (error as { data?: unknown }).data
@@ -202,7 +212,7 @@ function MemberProfileForm() {
     });
   };
 
-  if (receipt) return <SuccessState receipt={receipt} />;
+  if (submitted) return <SuccessState />;
 
   return (
     <>

@@ -8,6 +8,4 @@
 
 export interface MemberSheetSuccess {
   ok: true;
-  /** @minimum 1 */
-  row: number;
 }

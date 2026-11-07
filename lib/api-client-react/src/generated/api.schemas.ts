@@ -198,8 +198,6 @@ export interface CwcMemberFormSubmission {
 
 export interface MemberSheetSuccess {
   ok: true;
-  /** @minimum 1 */
-  row: number;
 }
 
 export interface ApiError {

@@ -78,14 +78,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiError"
-        "502":
-          description: Apps Script could not accept the submission
+        "500":
+          description: Sheet submission is not configured
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiError"
-        "503":
-          description: Sheet submission is not configured
+        "502":
+          description: Apps Script could not accept the submission
           content:
             application/json:
               schema:
@@ -262,10 +262,9 @@ components:
     MemberSheetSuccess:
       type: object
       additionalProperties: false
-      required: [ok, row]
+      required: [ok]
       properties:
         ok: { type: boolean, enum: [true] }
-        row: { type: integer, minimum: 1 }
     ApiError:
       type: object
       required: [error]
