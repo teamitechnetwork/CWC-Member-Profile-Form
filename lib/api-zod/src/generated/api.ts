@@ -133,3 +133,122 @@ export const SubmitMemberProfileResponse = zod.object({
 })
 
 
+/**
+ * Securely forwards a member record to the configured Apps Script web app.
+ * @summary Add a member to the CWC sheet
+ */
+export const submitMemberBodyFullNameMax = 160;
+
+export const submitMemberBodyWhatShouldWeCallYouMax = 160;
+
+export const submitMemberBodyEmailAddressMax = 320;
+
+export const submitMemberBodyPhoneNumberMax = 80;
+
+export const submitMemberBodyWhereAreYouBasedMax = 160;
+
+export const submitMemberBodyProfessionalProfileLinkMax = 500;
+
+export const submitMemberBodyCurrentRoleMax = 200;
+
+export const submitMemberBodyOrganizationMax = 200;
+
+export const submitMemberBodyIndustryMax = 200;
+
+export const submitMemberBodyYearsOfExperienceMax = 80;
+
+export const submitMemberBodyYourProfessionalBioMax = 3000;
+
+export const submitMemberBodyWhatAreYourStrengthsMax = 1500;
+
+export const submitMemberBodyAreasOfExpertiseMax = 3000;
+
+export const submitMemberBodyCertificationsCredentialsMax = 2000;
+
+export const submitMemberBodyLanguagesYouSpeakMax = 1000;
+
+export const submitMemberBodyAchievementsYouReProudOfMax = 3000;
+
+export const submitMemberBodyLeadershipExperienceMax = 3000;
+
+export const submitMemberBodyNotableProjectsMax = 3000;
+
+export const submitMemberBodyHighestDegreeMax = 300;
+
+export const submitMemberBodyRelevantTrainingMax = 3000;
+
+export const submitMemberBodyWhatAreYourShortTermGoalsMax = 3000;
+
+export const submitMemberBodyWhatSYourLongerTermVisionMax = 3000;
+
+export const submitMemberBodyWhatSkillsAreYouDevelopingMax = 3000;
+
+export const submitMemberBodyHowWouldYouLikeToContributeMax = 3000;
+
+export const submitMemberBodyWhatOpportunitiesAreYouSeekingMax = 2000;
+
+export const submitMemberBodyCausesCloseToYourHeartMax = 2000;
+
+export const submitMemberBodyBusinessNameMax = 200;
+
+export const submitMemberBodyWhatDoYouOfferMax = 3000;
+
+export const submitMemberBodyWhoDoYouLoveWorkingWithMax = 2000;
+
+export const submitMemberBodyAValueThatGuidesYouMax = 1000;
+
+export const submitMemberBodyOneThingYouDLikeMembersToKnowAboutYouMax = 1500;
+
+export const submitMemberBodyOptionalMemberDirectoryMax = 11;
+
+export const submitMemberBodyWhatAreYourExpectationsOfCWCWhatRecommendationsWouldYouLikeToShareMax = 3000;
+
+
+
+export const SubmitMemberBody = zod.object({
+  "Full name": zod.string().min(1).max(submitMemberBodyFullNameMax),
+  "What should we call you?": zod.string().max(submitMemberBodyWhatShouldWeCallYouMax),
+  "Email address": zod.string().email().max(submitMemberBodyEmailAddressMax),
+  "Phone number": zod.string().max(submitMemberBodyPhoneNumberMax),
+  "Where are you based?": zod.string().max(submitMemberBodyWhereAreYouBasedMax),
+  "Professional profile link": zod.string().max(submitMemberBodyProfessionalProfileLinkMax),
+  "Current role": zod.string().max(submitMemberBodyCurrentRoleMax),
+  "Organization": zod.string().max(submitMemberBodyOrganizationMax),
+  "Industry": zod.string().max(submitMemberBodyIndustryMax),
+  "Years of experience": zod.string().max(submitMemberBodyYearsOfExperienceMax),
+  "Your professional bio": zod.string().max(submitMemberBodyYourProfessionalBioMax),
+  "What are your strengths?": zod.string().max(submitMemberBodyWhatAreYourStrengthsMax),
+  "Areas of expertise": zod.string().max(submitMemberBodyAreasOfExpertiseMax),
+  "Certifications & credentials": zod.string().max(submitMemberBodyCertificationsCredentialsMax),
+  "Languages you speak": zod.string().max(submitMemberBodyLanguagesYouSpeakMax),
+  "Achievements you’re proud of": zod.string().max(submitMemberBodyAchievementsYouReProudOfMax),
+  "Leadership experience": zod.string().max(submitMemberBodyLeadershipExperienceMax),
+  "Notable projects": zod.string().max(submitMemberBodyNotableProjectsMax),
+  "Highest degree": zod.string().max(submitMemberBodyHighestDegreeMax),
+  "Relevant training": zod.string().max(submitMemberBodyRelevantTrainingMax),
+  "What are your short-term goals?": zod.string().max(submitMemberBodyWhatAreYourShortTermGoalsMax),
+  "What’s your longer-term vision?": zod.string().max(submitMemberBodyWhatSYourLongerTermVisionMax),
+  "What skills are you developing?": zod.string().max(submitMemberBodyWhatSkillsAreYouDevelopingMax),
+  "How would you like to contribute?": zod.string().max(submitMemberBodyHowWouldYouLikeToContributeMax),
+  "What opportunities are you seeking?": zod.string().max(submitMemberBodyWhatOpportunitiesAreYouSeekingMax),
+  "Causes close to your heart": zod.string().max(submitMemberBodyCausesCloseToYourHeartMax),
+  "Do you currently own or operate a business?": zod.boolean(),
+  "Business name": zod.string().max(submitMemberBodyBusinessNameMax),
+  "What do you offer?": zod.string().max(submitMemberBodyWhatDoYouOfferMax),
+  "Who do you love working with?": zod.string().max(submitMemberBodyWhoDoYouLoveWorkingWithMax),
+  "A value that guides you": zod.string().max(submitMemberBodyAValueThatGuidesYouMax),
+  "One thing you’d like members to know about you": zod.string().max(submitMemberBodyOneThingYouDLikeMembersToKnowAboutYouMax),
+  "Would you like to be contacted about opportunities?": zod.boolean(),
+  "Optional member directory": zod.array(zod.enum(['Preferred name', 'Current role', 'Organization', 'Industry', 'City', 'Professional profile link', 'Professional bio', 'Strengths', 'Areas of expertise', 'Business name', 'Products or services'])).max(submitMemberBodyOptionalMemberDirectoryMax),
+  "What are your expectations of CWC? What recommendations would you like to share?": zod.string().max(submitMemberBodyWhatAreYourExpectationsOfCWCWhatRecommendationsWouldYouLikeToShareMax)
+})
+
+
+
+
+export const SubmitMemberResponse = zod.object({
+  "ok": zod.literal(true),
+  "row": zod.number().int().min(1)
+})
+
+

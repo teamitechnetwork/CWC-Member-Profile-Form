@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useSubmitMemberProfile } from '@workspace/api-client-react';
-import type { MemberProfileInput } from '@workspace/api-client-react';
+import { useSubmitMember } from '@workspace/api-client-react';
+import type { CwcMemberFormSubmission, MemberProfileInput, MemberSheetSuccess } from '@workspace/api-client-react';
 import type { Path, UseFormRegister } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import { ArrowRight, BriefcaseBusiness, Compass, HeartHandshake, Sparkles, UsersRound } from 'lucide-react';
@@ -63,6 +63,20 @@ const directoryOptions: { value: NonNullable<MemberProfileInput['directoryFields
   { value: 'productsServices', label: 'Products or services' },
 ];
 
+const directoryLabels: Record<NonNullable<MemberProfileInput['directoryFields']>[number], CwcMemberFormSubmission['Optional member directory'][number]> = {
+  preferredName: 'Preferred name',
+  currentRole: 'Current role',
+  organization: 'Organization',
+  industry: 'Industry',
+  currentCity: 'City',
+  professionalProfile: 'Professional profile link',
+  professionalBio: 'Professional bio',
+  strengths: 'Strengths',
+  areasOfExpertise: 'Areas of expertise',
+  businessName: 'Business name',
+  productsServices: 'Products or services',
+};
+
 function Section({ icon, title, description, children, id }: { icon: ReactNode; title: string; description: string; children: ReactNode; id: string }) {
   return (
     <section className="form-section" id={id} aria-labelledby={`${id}-title`}>
@@ -105,34 +119,27 @@ function SiteFooter() {
   );
 }
 
-function SuccessState({ receipt }: { receipt: { id: string; submittedAt: string } }) {
-  const submitted = new Date(receipt.submittedAt);
-  const submittedDate = Number.isNaN(submitted.getTime())
-    ? receipt.submittedAt
-    : submitted.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+function SuccessState({ receipt }: { receipt: MemberSheetSuccess }) {
   return (
-    <>
-      <main className="success-wrap">
-        <div className="success-card" role="status" data-testid="status-submission-success">
-          <img className="success-mark" src="/cwc-mark.png" alt="" />
-          <div className="eyebrow">Profile received</div>
-          <h1>Thank you for sharing your story.</h1>
-          <p>Your profile has been submitted to Columbus Women Connect. Your voice and perspective help make this community stronger.</p>
-          <div className="receipt"><strong>Submission confirmed</strong>Received {submittedDate} · Reference {receipt.id}</div>
-          <p className="success-note">You can close this page. We’re glad you’re here.</p>
-        </div>
-      </main>
-      <SiteFooter />
-    </>
+    <main className="success-wrap">
+      <div className="success-card" role="status" data-testid="status-submission-success">
+        <img className="success-mark" src="/cwc-mark.png" alt="" />
+        <div className="eyebrow">Profile received</div>
+        <h1>Thank you for sharing your story.</h1>
+        <p>Your profile has been submitted to Columbus Women Connect. Your voice and perspective help make this community stronger.</p>
+        <div className="receipt"><strong>Submission confirmed</strong>Added to the member sheet in row {receipt.row}.</div>
+        <p className="success-note">You can close this page. We’re glad you’re here.</p>
+      </div>
+    </main>
   );
 }
 
 const steps = ['About you', 'Your experience', 'What’s next', 'Business', 'Connection'];
 
 function MemberProfileForm() {
-  const [receipt, setReceipt] = useState<{ id: string; submittedAt: string } | null>(null);
+  const [receipt, setReceipt] = useState<MemberSheetSuccess | null>(null);
   const [requestError, setRequestError] = useState('');
-  const mutation = useSubmitMemberProfile();
+  const mutation = useSubmitMember();
   const { register, handleSubmit, watch, formState: { errors } } = useForm<MemberProfileInput>({
     defaultValues: {
       ownsBusiness: false,
@@ -144,14 +151,54 @@ function MemberProfileForm() {
 
   const onSubmit = (values: MemberProfileInput) => {
     setRequestError('');
-    const data: MemberProfileInput = {
-      ...values,
-      directoryFields: values.directoryFields ?? [],
-      ...(values.ownsBusiness ? {} : { businessName: undefined, productsServices: undefined, idealClients: undefined }),
+    const data: CwcMemberFormSubmission = {
+      'Full name': values.fullName.trim(),
+      'What should we call you?': values.preferredName?.trim() ?? '',
+      'Email address': values.email.trim(),
+      'Phone number': values.phone?.trim() ?? '',
+      'Where are you based?': values.currentCity?.trim() ?? '',
+      'Professional profile link': values.professionalProfile?.trim() ?? '',
+      'Current role': values.currentRole?.trim() ?? '',
+      Organization: values.organization?.trim() ?? '',
+      Industry: values.industry?.trim() ?? '',
+      'Years of experience': values.yearsExperience?.trim() ?? '',
+      'Your professional bio': values.professionalBio?.trim() ?? '',
+      'What are your strengths?': values.strengths?.trim() ?? '',
+      'Areas of expertise': values.areasOfExpertise?.trim() ?? '',
+      'Certifications & credentials': values.certifications?.trim() ?? '',
+      'Languages you speak': values.languages?.trim() ?? '',
+      'Achievements you’re proud of': values.achievements?.trim() ?? '',
+      'Leadership experience': values.leadershipExperience?.trim() ?? '',
+      'Notable projects': values.notableProjects?.trim() ?? '',
+      'Highest degree': values.highestDegree?.trim() ?? '',
+      'Relevant training': values.relevantTraining?.trim() ?? '',
+      'What are your short-term goals?': values.shortTermGoals?.trim() ?? '',
+      'What’s your longer-term vision?': values.longTermVision?.trim() ?? '',
+      'What skills are you developing?': values.developingSkills?.trim() ?? '',
+      'How would you like to contribute?': values.communityContribution?.trim() ?? '',
+      'What opportunities are you seeking?': values.opportunitiesSeeking?.trim() ?? '',
+      'Causes close to your heart': values.passionateCauses?.trim() ?? '',
+      'Do you currently own or operate a business?': values.ownsBusiness,
+      'Business name': values.ownsBusiness ? values.businessName?.trim() ?? '' : '',
+      'What do you offer?': values.ownsBusiness ? values.productsServices?.trim() ?? '' : '',
+      'Who do you love working with?': values.ownsBusiness ? values.idealClients?.trim() ?? '' : '',
+      'A value that guides you': values.guidingValue?.trim() ?? '',
+      'One thing you’d like members to know about you': values.oneThingToKnow?.trim() ?? '',
+      'Would you like to be contacted about opportunities?': values.contactForOpportunities,
+      'Optional member directory': (values.directoryFields ?? []).map((field) => directoryLabels[field]),
+      'What are your expectations of CWC? What recommendations would you like to share?': values.expectationsAndRecommendations?.trim() ?? '',
     };
     mutation.mutate({ data }, {
-      onSuccess: (result: { id: string; submittedAt: string }) => setReceipt(result),
-      onError: () => setRequestError('We couldn’t submit your profile just now. Please check your connection and try again. Your answers are still here.'),
+      onSuccess: (result: MemberSheetSuccess) => setReceipt(result),
+      onError: (error) => {
+        const data = error && typeof error === 'object' && 'data' in error
+          ? (error as { data?: unknown }).data
+          : undefined;
+        const serverMessage = data && typeof data === 'object' && 'error' in data
+          ? (data as { error?: unknown }).error
+          : undefined;
+        setRequestError(typeof serverMessage === 'string' ? serverMessage : 'We couldn’t add your profile to the member sheet. Please try again. Your answers are still here.');
+      },
     });
   };
 

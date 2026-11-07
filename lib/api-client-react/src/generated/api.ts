@@ -21,9 +21,11 @@ import type {
 
 import type {
   ApiError,
+  CwcMemberFormSubmission,
   HealthStatus,
   MemberProfileInput,
-  MemberProfileReceipt
+  MemberProfileReceipt,
+  MemberSheetSuccess
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -218,5 +220,94 @@ export const useSubmitMemberProfile = <TError = ErrorType<ApiError>,
         TContext
       > => {
       return useMutation(getSubmitMemberProfileMutationOptions(options));
+    }
+
+export const getSubmitMemberUrl = () => {
+
+
+
+
+  return `/api/members`
+}
+
+/**
+ * Securely forwards a member record to the configured Apps Script web app.
+ * @summary Add a member to the CWC sheet
+ */
+export const submitMember = async (cwcMemberFormSubmission: CwcMemberFormSubmission, options?: Parameters<typeof customFetch>[1]): Promise<MemberSheetSuccess> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<MemberSheetSuccess>(getSubmitMemberUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(cwcMemberFormSubmission)
+  }
+);}
+
+
+
+
+
+export const getSubmitMemberMutationKey = () => ['submitMember'] as const;
+
+export const getSubmitMemberMutationOptions = <TError = ErrorType<ApiError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof submitMember>>, TError,SubmitMemberMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof submitMember>>, TError,SubmitMemberMutationVariables, TContext> => {
+
+const mutationKey = getSubmitMemberMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof submitMember>>, SubmitMemberMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  submitMember(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SubmitMemberMutationResult = NonNullable<Awaited<ReturnType<typeof submitMember>>>
+    export type SubmitMemberMutationBody = BodyType<CwcMemberFormSubmission>
+    export type SubmitMemberMutationError = ErrorType<ApiError>
+    export type SubmitMemberMutationVariables = {data: BodyType<CwcMemberFormSubmission>}
+
+    /**
+ * @summary Add a member to the CWC sheet
+ */
+export const useSubmitMember = <TError = ErrorType<ApiError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof submitMember>>, TError,SubmitMemberMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof submitMember>>,
+        TError,
+        SubmitMemberMutationVariables,
+        TContext
+      > => {
+      return useMutation(getSubmitMemberMutationOptions(options));
     }
 

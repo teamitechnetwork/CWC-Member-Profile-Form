@@ -12,6 +12,8 @@ tags:
     description: Health operations
   - name: member-profiles
     description: CWC member profile submissions
+  - name: members
+    description: Google Sheets member submissions
 paths:
   /healthz:
     get:
@@ -47,6 +49,43 @@ paths:
                 $ref: "#/components/schemas/MemberProfileReceipt"
         "400":
           description: Invalid profile details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /members:
+    post:
+      operationId: submitMember
+      tags: [members]
+      summary: Add a member to the CWC sheet
+      description: Securely forwards a member record to the configured Apps Script web app.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+                $ref: "#/components/schemas/CwcMemberFormSubmission"
+      responses:
+        "200":
+          description: Member added to the sheet
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MemberSheetSuccess"
+        "400":
+          description: Invalid member details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "502":
+          description: Apps Script could not accept the submission
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Sheet submission is not configured
           content:
             application/json:
               schema:
@@ -128,6 +167,105 @@ components:
       properties:
         id: { type: string, format: uuid }
         submittedAt: { type: string, format: date-time }
+    CwcMemberFormSubmission:
+      type: object
+      additionalProperties: false
+      required:
+        - Full name
+        - What should we call you?
+        - Email address
+        - Phone number
+        - Where are you based?
+        - Professional profile link
+        - Current role
+        - Organization
+        - Industry
+        - Years of experience
+        - Your professional bio
+        - What are your strengths?
+        - Areas of expertise
+        - Certifications & credentials
+        - Languages you speak
+        - Achievements you’re proud of
+        - Leadership experience
+        - Notable projects
+        - Highest degree
+        - Relevant training
+        - What are your short-term goals?
+        - What’s your longer-term vision?
+        - What skills are you developing?
+        - How would you like to contribute?
+        - What opportunities are you seeking?
+        - Causes close to your heart
+        - Do you currently own or operate a business?
+        - Business name
+        - What do you offer?
+        - Who do you love working with?
+        - A value that guides you
+        - One thing you’d like members to know about you
+        - Would you like to be contacted about opportunities?
+        - Optional member directory
+        - What are your expectations of CWC? What recommendations would you like to share?
+      properties:
+        "Full name": { type: string, minLength: 1, maxLength: 160 }
+        "What should we call you?": { type: string, maxLength: 160 }
+        "Email address": { type: string, format: email, maxLength: 320 }
+        "Phone number": { type: string, maxLength: 80 }
+        "Where are you based?": { type: string, maxLength: 160 }
+        "Professional profile link": { type: string, maxLength: 500 }
+        "Current role": { type: string, maxLength: 200 }
+        "Organization": { type: string, maxLength: 200 }
+        "Industry": { type: string, maxLength: 200 }
+        "Years of experience": { type: string, maxLength: 80 }
+        "Your professional bio": { type: string, maxLength: 3000 }
+        "What are your strengths?": { type: string, maxLength: 1500 }
+        "Areas of expertise": { type: string, maxLength: 3000 }
+        "Certifications & credentials": { type: string, maxLength: 2000 }
+        "Languages you speak": { type: string, maxLength: 1000 }
+        "Achievements you’re proud of": { type: string, maxLength: 3000 }
+        "Leadership experience": { type: string, maxLength: 3000 }
+        "Notable projects": { type: string, maxLength: 3000 }
+        "Highest degree": { type: string, maxLength: 300 }
+        "Relevant training": { type: string, maxLength: 3000 }
+        "What are your short-term goals?": { type: string, maxLength: 3000 }
+        "What’s your longer-term vision?": { type: string, maxLength: 3000 }
+        "What skills are you developing?": { type: string, maxLength: 3000 }
+        "How would you like to contribute?": { type: string, maxLength: 3000 }
+        "What opportunities are you seeking?": { type: string, maxLength: 2000 }
+        "Causes close to your heart": { type: string, maxLength: 2000 }
+        "Do you currently own or operate a business?": { type: boolean }
+        "Business name": { type: string, maxLength: 200 }
+        "What do you offer?": { type: string, maxLength: 3000 }
+        "Who do you love working with?": { type: string, maxLength: 2000 }
+        "A value that guides you": { type: string, maxLength: 1000 }
+        "One thing you’d like members to know about you": { type: string, maxLength: 1500 }
+        "Would you like to be contacted about opportunities?": { type: boolean }
+        "Optional member directory":
+          type: array
+          maxItems: 11
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+              - Preferred name
+              - Current role
+              - Organization
+              - Industry
+              - City
+              - Professional profile link
+              - Professional bio
+              - Strengths
+              - Areas of expertise
+              - Business name
+              - Products or services
+        "What are your expectations of CWC? What recommendations would you like to share?": { type: string, maxLength: 3000 }
+    MemberSheetSuccess:
+      type: object
+      additionalProperties: false
+      required: [ok, row]
+      properties:
+        ok: { type: boolean, enum: [true] }
+        row: { type: integer, minimum: 1 }
     ApiError:
       type: object
       required: [error]

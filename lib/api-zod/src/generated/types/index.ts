@@ -7,7 +7,10 @@
  */
 
 export * from './apiError';
+export * from './cwcMemberFormSubmission';
+export * from './cwcMemberFormSubmissionOptionalMemberDirectoryItem';
 export * from './healthStatus';
 export * from './memberProfileInput';
 export * from './memberProfileInputDirectoryFieldsItem';
 export * from './memberProfileReceipt';
+export * from './memberSheetSuccess';
