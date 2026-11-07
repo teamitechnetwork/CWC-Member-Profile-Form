@@ -131,7 +131,12 @@ function SiteFooter() {
           <span className="brand-divider" aria-hidden="true" />
           <img className="partner-logo" src="/cwc-mark.png" alt="Partner organization logo" data-testid="img-footer-partner-logo" />
         </div>
-        <div className="footer-copy">A community built on connection, generosity, and growth.</div>
+        <div className="footer-meta">
+          <div className="footer-copy">A community built on connection, generosity, and growth.</div>
+          <div className="footer-credit">
+            Technologies by: <a href="https://www.itechnetworkafrica.com/" target="_blank" rel="noreferrer">iTech Network Africa</a>
+          </div>
+        </div>
       </div>
     </footer>
   );

@@ -162,7 +162,11 @@ button { cursor: pointer; }
 .footer-brand-pair .brand-logo { width:176px; }
 .footer-brand-pair .partner-logo { width:64px; height:64px; }
 .footer-brand-pair .brand-divider { height:42px; background:rgba(91,48,79,.22); }
+.footer-meta { display:grid; justify-items:end; gap:5px; text-align:right; }
 .footer-copy { color:#d4c1d0; font-size:12px; }
+.footer-credit { color:#d4c1d0; font-size:11px; line-height:1.5; }
+.footer-credit a { color:#f0c467; text-decoration:underline; text-decoration-color:rgba(240,196,103,.5); text-underline-offset:3px; }
+.footer-credit a:hover, .footer-credit a:focus-visible { color:#fff; text-decoration-color:currentColor; }
 .success-wrap { width:min(750px,calc(100% - 40px)); margin:72px auto 100px; }
 .success-card { padding:clamp(30px,6vw,58px); border:1px solid #eadde5; border-radius:22px; background:#fff; text-align:center; box-shadow:0 18px 50px rgba(74,43,67,.08); }
 .success-mark { width:74px; height:74px; margin:0 auto 24px; object-fit:contain; padding:13px; border-radius:24px; background:#f8e8ef; }
@@ -205,6 +209,7 @@ button { cursor: pointer; }
  .submit-row { align-items:stretch; flex-direction:column; padding-top:13px; }
  .submit-button { width:100%; }
  .footer-inner { min-height:112px; flex-direction:column; justify-content:center; text-align:center; gap:8px; }
+ .footer-meta { justify-items:center; text-align:center; }
  .footer-brand-pair .brand-logo { width:156px; }
  .footer-brand-pair .partner-logo { width:58px; height:58px; }
  .success-wrap { margin:38px auto 64px; }
