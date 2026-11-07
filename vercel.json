@@ -1,6 +1,6 @@
 {
   "framework": "vite",
   "installCommand": "pnpm install --frozen-lockfile",
-  "buildCommand": "pnpm --filter @workspace/cwc-member-profile run build",
+  "buildCommand": "pnpm exec tsc -b lib/api-zod lib/db && pnpm --filter @workspace/api-server run typecheck && pnpm --filter @workspace/cwc-member-profile run build",
   "outputDirectory": "artifacts/cwc-member-profile/dist/public"
 }
