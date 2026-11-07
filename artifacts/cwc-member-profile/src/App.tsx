@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useSubmitMember } from '@workspace/api-client-react';
 import type { CwcMemberFormSubmission, MemberProfileInput } from '@workspace/api-client-react';
 import type { Path, UseFormRegister } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
-import { ArrowRight, BriefcaseBusiness, Compass, HeartHandshake, Sparkles, UsersRound } from 'lucide-react';
+import { ArrowRight, BriefcaseBusiness, Compass, HeartHandshake, UsersRound } from 'lucide-react';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -153,10 +153,19 @@ function SuccessState() {
 }
 
 const steps = ['About you', 'Your experience', 'What’s next', 'Business', 'Connection'];
+const heroPhrases = [
+  'your story.',
+  'your next chapter.',
+  'what you’re building.',
+  'the impact you make.',
+];
 
 function MemberProfileForm() {
   const [submitted, setSubmitted] = useState(false);
   const [requestError, setRequestError] = useState('');
+  const [heroPhrase, setHeroPhrase] = useState(heroPhrases[0]);
+  const [heroPhraseIndex, setHeroPhraseIndex] = useState(0);
+  const [isDeletingHeroPhrase, setIsDeletingHeroPhrase] = useState(false);
   const mutation = useSubmitMember();
   const { register, handleSubmit, watch, formState: { errors } } = useForm<MemberProfileInput>({
     defaultValues: {
@@ -166,6 +175,34 @@ function MemberProfileForm() {
     },
   });
   const ownsBusiness = watch('ownsBusiness');
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setHeroPhrase(heroPhrases[0]);
+      setHeroPhraseIndex(0);
+      setIsDeletingHeroPhrase(false);
+      return;
+    }
+
+    const phrase = heroPhrases[heroPhraseIndex];
+    const isPhraseComplete = heroPhrase === phrase;
+    const timeout = window.setTimeout(() => {
+      if (isDeletingHeroPhrase) {
+        if (heroPhrase.length > 0) {
+          setHeroPhrase(heroPhrase.slice(0, -1));
+        } else {
+          setIsDeletingHeroPhrase(false);
+          setHeroPhraseIndex((index) => (index + 1) % heroPhrases.length);
+        }
+      } else if (isPhraseComplete) {
+        setIsDeletingHeroPhrase(true);
+      } else {
+        setHeroPhrase(phrase.slice(0, heroPhrase.length + 1));
+      }
+    }, isDeletingHeroPhrase ? 42 : isPhraseComplete ? 1350 : 85);
+
+    return () => window.clearTimeout(timeout);
+  }, [heroPhrase, heroPhraseIndex, isDeletingHeroPhrase]);
 
   const onSubmit = (values: MemberProfileInput) => {
     setRequestError('');
@@ -242,9 +279,12 @@ function MemberProfileForm() {
       <section className="hero">
         <div className="hero-inner">
           <div className="eyebrow">Columbus Women Connect</div>
-          <h1>There’s more to your story.<br /><em>Let’s get to know you.</em></h1>
+          <h1 aria-label="There’s more to your story. Let’s get to know you.">
+            There’s more to<br />
+            <em aria-hidden="true">{heroPhrase}<span className="hero-typing-caret" /></em>
+          </h1>
           <p className="hero-copy">Tell us what you do, what you’re working toward, and how you’d like to connect. Your profile helps us create more meaningful introductions and opportunities across our community.</p>
-          <div className="hero-bottom"><span><Sparkles size={15} aria-hidden="true" /> Share only what feels right</span><i aria-hidden="true" /><span>About 8 minutes to complete</span></div>
+          <div className="hero-bottom"><span>Share only what feels right</span><i aria-hidden="true" /><span>About 8 minutes to complete</span></div>
         </div>
       </section>
 
