@@ -18,6 +18,6 @@ pnpm --filter @workspace/cwc-member-profile run build
 
 ## Vercel
 
-The root `vercel.json` builds the CWC web app from this pnpm workspace and serves the static files from `artifacts/cwc-member-profile/dist/public`. Import the Git repository into Vercel with the repository root as the project root; the install, build, and output settings are already specified.
+The root `vercel.json` builds the CWC web app from this pnpm workspace and serves the static files from `artifacts/cwc-member-profile/dist/public`. The root `api/members.ts` file provides the Vercel serverless `POST /api/members` endpoint used by the form.
 
-The current Vercel setup deploys the web interface only. Form submissions use the shared `/api/member-profiles` service, so submissions will need a Vercel-compatible API endpoint and Google Sheets configuration before they can be sent from a Vercel deployment. Keep Google credentials and sheet access details in Vercel environment settings, never in Git.
+Import the Git repository into Vercel with the repository root as the project root. Set `SHEET_URL` and `SHEET_SECRET` in the Vercel project's environment settings for each environment that should accept submissions. Replit Secrets do not automatically populate Vercel's environment. Never put either value in Git or browser code.
