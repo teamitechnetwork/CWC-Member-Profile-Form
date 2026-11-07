@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { MemberProfileInputBusinessType } from './memberProfileInputBusinessType';
 import type { MemberProfileInputDirectoryFieldsItem } from './memberProfileInputDirectoryFieldsItem';
 
 export interface MemberProfileInput {
@@ -21,6 +22,8 @@ export interface MemberProfileInput {
   phone?: string;
   /** @maxLength 500 */
   professionalProfile?: string;
+  /** @maxLength 500 */
+  linkedinProfile?: string;
   /** @maxLength 160 */
   currentCity?: string;
   /** @maxLength 200 */
@@ -64,8 +67,11 @@ export interface MemberProfileInput {
   /** @maxLength 2000 */
   passionateCauses?: string;
   ownsBusiness: boolean;
+  businessType?: MemberProfileInputBusinessType;
   /** @maxLength 200 */
   businessName?: string;
+  /** @maxLength 3000 */
+  businessDescription?: string;
   /** @maxLength 3000 */
   productsServices?: string;
   /** @maxLength 2000 */

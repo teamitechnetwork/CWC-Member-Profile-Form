@@ -114,6 +114,7 @@ components:
         email: { type: string, format: email, maxLength: 320 }
         phone: { type: string, maxLength: 80 }
         professionalProfile: { type: string, maxLength: 500 }
+        linkedinProfile: { type: string, maxLength: 500 }
         currentCity: { type: string, maxLength: 160 }
         currentRole: { type: string, maxLength: 200 }
         organization: { type: string, maxLength: 200 }
@@ -136,7 +137,11 @@ components:
         opportunitiesSeeking: { type: string, maxLength: 2000 }
         passionateCauses: { type: string, maxLength: 2000 }
         ownsBusiness: { type: boolean }
+        businessType:
+          type: string
+          enum: [Business, Nonprofit, Both]
         businessName: { type: string, maxLength: 200 }
+        businessDescription: { type: string, maxLength: 3000 }
         productsServices: { type: string, maxLength: 3000 }
         idealClients: { type: string, maxLength: 2000 }
         guidingValue: { type: string, maxLength: 1000 }
@@ -154,6 +159,7 @@ components:
               - industry
               - currentCity
               - professionalProfile
+              - linkedinProfile
               - professionalBio
               - strengths
               - areasOfExpertise
@@ -198,9 +204,6 @@ components:
         - What opportunities are you seeking?
         - Causes close to your heart
         - Do you currently own or operate a business?
-        - Business name
-        - What do you offer?
-        - Who do you love working with?
         - A value that guides you
         - One thing you’d like members to know about you
         - Would you like to be contacted about opportunities?
@@ -213,6 +216,7 @@ components:
         "Phone number": { type: string, maxLength: 80 }
         "Where are you based?": { type: string, maxLength: 160 }
         "Professional profile link": { type: string, maxLength: 500 }
+        "LinkedIn profile": { type: string, maxLength: 500 }
         "Current role": { type: string, maxLength: 200 }
         "Organization": { type: string, maxLength: 200 }
         "Industry": { type: string, maxLength: 200 }
@@ -234,7 +238,11 @@ components:
         "What opportunities are you seeking?": { type: string, maxLength: 2000 }
         "Causes close to your heart": { type: string, maxLength: 2000 }
         "Do you currently own or operate a business?": { type: boolean }
+        "Is this a business or a nonprofit?":
+          type: string
+          enum: [Business, Nonprofit, Both]
         "Business name": { type: string, maxLength: 200 }
+        "What is your business or nonprofit for?": { type: string, maxLength: 3000 }
         "What do you offer?": { type: string, maxLength: 3000 }
         "Who do you love working with?": { type: string, maxLength: 2000 }
         "A value that guides you": { type: string, maxLength: 1000 }
@@ -242,7 +250,7 @@ components:
         "Would you like to be contacted about opportunities?": { type: boolean }
         "Optional member directory":
           type: array
-          maxItems: 11
+          maxItems: 12
           uniqueItems: true
           items:
             type: string
@@ -253,10 +261,11 @@ components:
               - Industry
               - City
               - Professional profile link
+              - LinkedIn profile
               - Professional bio
               - Strengths
               - Areas of expertise
-              - Business name
+              - Business or nonprofit name
               - Products or services
         "What are your expectations of CWC? What recommendations would you like to share?": { type: string, maxLength: 3000 }
     MemberSheetSuccess:

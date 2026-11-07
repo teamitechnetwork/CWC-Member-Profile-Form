@@ -16,6 +16,7 @@ export const MemberProfileInputDirectoryFieldsItem = {
   industry: 'industry',
   currentCity: 'currentCity',
   professionalProfile: 'professionalProfile',
+  linkedinProfile: 'linkedinProfile',
   professionalBio: 'professionalBio',
   strengths: 'strengths',
   areasOfExpertise: 'areasOfExpertise',

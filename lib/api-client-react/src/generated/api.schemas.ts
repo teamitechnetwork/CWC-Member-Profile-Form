@@ -9,6 +9,15 @@ export interface HealthStatus {
   status: string;
 }
 
+export type MemberProfileInputBusinessType = typeof MemberProfileInputBusinessType[keyof typeof MemberProfileInputBusinessType];
+
+
+export const MemberProfileInputBusinessType = {
+  Business: 'Business',
+  Nonprofit: 'Nonprofit',
+  Both: 'Both',
+} as const;
+
 export type MemberProfileInputDirectoryFieldsItem = typeof MemberProfileInputDirectoryFieldsItem[keyof typeof MemberProfileInputDirectoryFieldsItem];
 
 
@@ -19,6 +28,7 @@ export const MemberProfileInputDirectoryFieldsItem = {
   industry: 'industry',
   currentCity: 'currentCity',
   professionalProfile: 'professionalProfile',
+  linkedinProfile: 'linkedinProfile',
   professionalBio: 'professionalBio',
   strengths: 'strengths',
   areasOfExpertise: 'areasOfExpertise',
@@ -40,6 +50,8 @@ export interface MemberProfileInput {
   phone?: string;
   /** @maxLength 500 */
   professionalProfile?: string;
+  /** @maxLength 500 */
+  linkedinProfile?: string;
   /** @maxLength 160 */
   currentCity?: string;
   /** @maxLength 200 */
@@ -83,8 +95,11 @@ export interface MemberProfileInput {
   /** @maxLength 2000 */
   passionateCauses?: string;
   ownsBusiness: boolean;
+  businessType?: MemberProfileInputBusinessType;
   /** @maxLength 200 */
   businessName?: string;
+  /** @maxLength 3000 */
+  businessDescription?: string;
   /** @maxLength 3000 */
   productsServices?: string;
   /** @maxLength 2000 */
@@ -105,6 +120,15 @@ export interface MemberProfileReceipt {
   submittedAt: string;
 }
 
+export type CwcMemberFormSubmissionIsThisABusinessOrANonprofit = typeof CwcMemberFormSubmissionIsThisABusinessOrANonprofit[keyof typeof CwcMemberFormSubmissionIsThisABusinessOrANonprofit];
+
+
+export const CwcMemberFormSubmissionIsThisABusinessOrANonprofit = {
+  Business: 'Business',
+  Nonprofit: 'Nonprofit',
+  Both: 'Both',
+} as const;
+
 export type CwcMemberFormSubmissionOptionalMemberDirectoryItem = typeof CwcMemberFormSubmissionOptionalMemberDirectoryItem[keyof typeof CwcMemberFormSubmissionOptionalMemberDirectoryItem];
 
 
@@ -115,10 +139,11 @@ export const CwcMemberFormSubmissionOptionalMemberDirectoryItem = {
   Industry: 'Industry',
   City: 'City',
   Professional_profile_link: 'Professional profile link',
+  LinkedIn_profile: 'LinkedIn profile',
   Professional_bio: 'Professional bio',
   Strengths: 'Strengths',
   Areas_of_expertise: 'Areas of expertise',
-  Business_name: 'Business name',
+  Business_or_nonprofit_name: 'Business or nonprofit name',
   Products_or_services: 'Products or services',
 } as const;
 
@@ -138,6 +163,8 @@ export interface CwcMemberFormSubmission {
   'Where are you based?': string;
   /** @maxLength 500 */
   'Professional profile link': string;
+  /** @maxLength 500 */
+  'LinkedIn profile'?: string;
   /** @maxLength 200 */
   'Current role': string;
   /** @maxLength 200 */
@@ -179,18 +206,21 @@ export interface CwcMemberFormSubmission {
   /** @maxLength 2000 */
   'Causes close to your heart': string;
   'Do you currently own or operate a business?': boolean;
+  'Is this a business or a nonprofit?'?: CwcMemberFormSubmissionIsThisABusinessOrANonprofit;
   /** @maxLength 200 */
-  'Business name': string;
+  'Business name'?: string;
   /** @maxLength 3000 */
-  'What do you offer?': string;
+  'What is your business or nonprofit for?'?: string;
+  /** @maxLength 3000 */
+  'What do you offer?'?: string;
   /** @maxLength 2000 */
-  'Who do you love working with?': string;
+  'Who do you love working with?'?: string;
   /** @maxLength 1000 */
   'A value that guides you': string;
   /** @maxLength 1500 */
   'One thing you’d like members to know about you': string;
   'Would you like to be contacted about opportunities?': boolean;
-  /** @maxItems 11 */
+  /** @maxItems 12 */
   'Optional member directory': CwcMemberFormSubmissionOptionalMemberDirectoryItem[];
   /** @maxLength 3000 */
   'What are your expectations of CWC? What recommendations would you like to share?': string;

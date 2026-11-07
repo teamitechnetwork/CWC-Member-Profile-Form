@@ -31,6 +31,8 @@ export const submitMemberProfileBodyPhoneMax = 80;
 
 export const submitMemberProfileBodyProfessionalProfileMax = 500;
 
+export const submitMemberProfileBodyLinkedinProfileMax = 500;
+
 export const submitMemberProfileBodyCurrentCityMax = 160;
 
 export const submitMemberProfileBodyCurrentRoleMax = 200;
@@ -75,6 +77,8 @@ export const submitMemberProfileBodyPassionateCausesMax = 2000;
 
 export const submitMemberProfileBodyBusinessNameMax = 200;
 
+export const submitMemberProfileBodyBusinessDescriptionMax = 3000;
+
 export const submitMemberProfileBodyProductsServicesMax = 3000;
 
 export const submitMemberProfileBodyIdealClientsMax = 2000;
@@ -95,6 +99,7 @@ export const SubmitMemberProfileBody = zod.object({
   "email": zod.string().email().max(submitMemberProfileBodyEmailMax),
   "phone": zod.string().max(submitMemberProfileBodyPhoneMax).optional(),
   "professionalProfile": zod.string().max(submitMemberProfileBodyProfessionalProfileMax).optional(),
+  "linkedinProfile": zod.string().max(submitMemberProfileBodyLinkedinProfileMax).optional(),
   "currentCity": zod.string().max(submitMemberProfileBodyCurrentCityMax).optional(),
   "currentRole": zod.string().max(submitMemberProfileBodyCurrentRoleMax).optional(),
   "organization": zod.string().max(submitMemberProfileBodyOrganizationMax).optional(),
@@ -117,12 +122,14 @@ export const SubmitMemberProfileBody = zod.object({
   "opportunitiesSeeking": zod.string().max(submitMemberProfileBodyOpportunitiesSeekingMax).optional(),
   "passionateCauses": zod.string().max(submitMemberProfileBodyPassionateCausesMax).optional(),
   "ownsBusiness": zod.boolean(),
+  "businessType": zod.enum(['Business', 'Nonprofit', 'Both']).optional(),
   "businessName": zod.string().max(submitMemberProfileBodyBusinessNameMax).optional(),
+  "businessDescription": zod.string().max(submitMemberProfileBodyBusinessDescriptionMax).optional(),
   "productsServices": zod.string().max(submitMemberProfileBodyProductsServicesMax).optional(),
   "idealClients": zod.string().max(submitMemberProfileBodyIdealClientsMax).optional(),
   "guidingValue": zod.string().max(submitMemberProfileBodyGuidingValueMax).optional(),
   "oneThingToKnow": zod.string().max(submitMemberProfileBodyOneThingToKnowMax).optional(),
-  "directoryFields": zod.array(zod.enum(['preferredName', 'currentRole', 'organization', 'industry', 'currentCity', 'professionalProfile', 'professionalBio', 'strengths', 'areasOfExpertise', 'businessName', 'productsServices'])).max(submitMemberProfileBodyDirectoryFieldsMax),
+  "directoryFields": zod.array(zod.enum(['preferredName', 'currentRole', 'organization', 'industry', 'currentCity', 'professionalProfile', 'linkedinProfile', 'professionalBio', 'strengths', 'areasOfExpertise', 'businessName', 'productsServices'])).max(submitMemberProfileBodyDirectoryFieldsMax),
   "contactForOpportunities": zod.boolean(),
   "expectationsAndRecommendations": zod.string().max(submitMemberProfileBodyExpectationsAndRecommendationsMax).optional()
 })
@@ -148,6 +155,8 @@ export const submitMemberBodyPhoneNumberMax = 80;
 export const submitMemberBodyWhereAreYouBasedMax = 160;
 
 export const submitMemberBodyProfessionalProfileLinkMax = 500;
+
+export const submitMemberBodyLinkedInProfileMax = 500;
 
 export const submitMemberBodyCurrentRoleMax = 200;
 
@@ -191,6 +200,8 @@ export const submitMemberBodyCausesCloseToYourHeartMax = 2000;
 
 export const submitMemberBodyBusinessNameMax = 200;
 
+export const submitMemberBodyWhatIsYourBusinessOrNonprofitForMax = 3000;
+
 export const submitMemberBodyWhatDoYouOfferMax = 3000;
 
 export const submitMemberBodyWhoDoYouLoveWorkingWithMax = 2000;
@@ -199,7 +210,7 @@ export const submitMemberBodyAValueThatGuidesYouMax = 1000;
 
 export const submitMemberBodyOneThingYouDLikeMembersToKnowAboutYouMax = 1500;
 
-export const submitMemberBodyOptionalMemberDirectoryMax = 11;
+export const submitMemberBodyOptionalMemberDirectoryMax = 12;
 
 export const submitMemberBodyWhatAreYourExpectationsOfCWCWhatRecommendationsWouldYouLikeToShareMax = 3000;
 
@@ -212,6 +223,7 @@ export const SubmitMemberBody = zod.object({
   "Phone number": zod.string().max(submitMemberBodyPhoneNumberMax),
   "Where are you based?": zod.string().max(submitMemberBodyWhereAreYouBasedMax),
   "Professional profile link": zod.string().max(submitMemberBodyProfessionalProfileLinkMax),
+  "LinkedIn profile": zod.string().max(submitMemberBodyLinkedInProfileMax).optional(),
   "Current role": zod.string().max(submitMemberBodyCurrentRoleMax),
   "Organization": zod.string().max(submitMemberBodyOrganizationMax),
   "Industry": zod.string().max(submitMemberBodyIndustryMax),
@@ -233,22 +245,20 @@ export const SubmitMemberBody = zod.object({
   "What opportunities are you seeking?": zod.string().max(submitMemberBodyWhatOpportunitiesAreYouSeekingMax),
   "Causes close to your heart": zod.string().max(submitMemberBodyCausesCloseToYourHeartMax),
   "Do you currently own or operate a business?": zod.boolean(),
-  "Business name": zod.string().max(submitMemberBodyBusinessNameMax),
-  "What do you offer?": zod.string().max(submitMemberBodyWhatDoYouOfferMax),
-  "Who do you love working with?": zod.string().max(submitMemberBodyWhoDoYouLoveWorkingWithMax),
+  "Is this a business or a nonprofit?": zod.enum(['Business', 'Nonprofit', 'Both']).optional(),
+  "Business name": zod.string().max(submitMemberBodyBusinessNameMax).optional(),
+  "What is your business or nonprofit for?": zod.string().max(submitMemberBodyWhatIsYourBusinessOrNonprofitForMax).optional(),
+  "What do you offer?": zod.string().max(submitMemberBodyWhatDoYouOfferMax).optional(),
+  "Who do you love working with?": zod.string().max(submitMemberBodyWhoDoYouLoveWorkingWithMax).optional(),
   "A value that guides you": zod.string().max(submitMemberBodyAValueThatGuidesYouMax),
   "One thing you’d like members to know about you": zod.string().max(submitMemberBodyOneThingYouDLikeMembersToKnowAboutYouMax),
   "Would you like to be contacted about opportunities?": zod.boolean(),
-  "Optional member directory": zod.array(zod.enum(['Preferred name', 'Current role', 'Organization', 'Industry', 'City', 'Professional profile link', 'Professional bio', 'Strengths', 'Areas of expertise', 'Business name', 'Products or services'])).max(submitMemberBodyOptionalMemberDirectoryMax),
+  "Optional member directory": zod.array(zod.enum(['Preferred name', 'Current role', 'Organization', 'Industry', 'City', 'Professional profile link', 'LinkedIn profile', 'Professional bio', 'Strengths', 'Areas of expertise', 'Business or nonprofit name', 'Products or services'])).max(submitMemberBodyOptionalMemberDirectoryMax),
   "What are your expectations of CWC? What recommendations would you like to share?": zod.string().max(submitMemberBodyWhatAreYourExpectationsOfCWCWhatRecommendationsWouldYouLikeToShareMax)
 })
 
-
-
-
 export const SubmitMemberResponse = zod.object({
-  "ok": zod.literal(true),
-  "row": zod.number().int().min(1)
+  "ok": zod.literal(true)
 })
 
 

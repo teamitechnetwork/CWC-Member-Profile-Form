@@ -25,6 +25,12 @@ type FieldProps = {
   errorMessage?: string;
 };
 
+function normalizeProfileUrl(value?: string) {
+  const trimmed = value?.trim() ?? '';
+  if (!trimmed) return '';
+  return /^[a-z][a-z\d+.-]*:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+}
+
 function InputField({ name, label, placeholder, register, required, type = 'text', hint, errorMessage }: FieldProps) {
   return (
     <div className="field">
@@ -33,6 +39,16 @@ function InputField({ name, label, placeholder, register, required, type = 'text
       <input id={name} type={type} placeholder={placeholder} aria-required={required} aria-invalid={!!errorMessage} aria-describedby={errorMessage ? `${name}-error` : undefined} data-testid={`input-${name}`} {...register(name, {
         ...(required ? { required: `${label} is required` } : {}),
         ...(type === 'email' ? { pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Enter a valid email address' } } : {}),
+        ...(type === 'url' ? {
+          validate: (value: string | undefined) => {
+            if (!value?.trim()) return true;
+            try {
+              return Boolean(new URL(normalizeProfileUrl(value)).hostname) || 'Enter a valid URL';
+            } catch {
+              return 'Enter a valid URL';
+            }
+          },
+        } : {}),
       })} />
       {errorMessage && <p className="error-text" id={`${name}-error`} role="alert">{errorMessage}</p>}
     </div>
@@ -56,10 +72,11 @@ const directoryOptions: { value: NonNullable<MemberProfileInput['directoryFields
   { value: 'industry', label: 'Industry' },
   { value: 'currentCity', label: 'City' },
   { value: 'professionalProfile', label: 'Professional profile link' },
+  { value: 'linkedinProfile', label: 'LinkedIn profile' },
   { value: 'professionalBio', label: 'Professional bio' },
   { value: 'strengths', label: 'Strengths' },
   { value: 'areasOfExpertise', label: 'Areas of expertise' },
-  { value: 'businessName', label: 'Business name' },
+  { value: 'businessName', label: 'Business or nonprofit name' },
   { value: 'productsServices', label: 'Products or services' },
 ];
 
@@ -70,10 +87,11 @@ const directoryLabels: Record<NonNullable<MemberProfileInput['directoryFields']>
   industry: 'Industry',
   currentCity: 'City',
   professionalProfile: 'Professional profile link',
+  linkedinProfile: 'LinkedIn profile',
   professionalBio: 'Professional bio',
   strengths: 'Strengths',
   areasOfExpertise: 'Areas of expertise',
-  businessName: 'Business name',
+  businessName: 'Business or nonprofit name',
   productsServices: 'Products or services',
 };
 
@@ -158,6 +176,7 @@ function MemberProfileForm() {
       'Phone number': values.phone?.trim() ?? '',
       'Where are you based?': values.currentCity?.trim() ?? '',
       'Professional profile link': values.professionalProfile?.trim() ?? '',
+      ...(values.linkedinProfile?.trim() ? { 'LinkedIn profile': normalizeProfileUrl(values.linkedinProfile) } : {}),
       'Current role': values.currentRole?.trim() ?? '',
       Organization: values.organization?.trim() ?? '',
       Industry: values.industry?.trim() ?? '',
@@ -179,9 +198,13 @@ function MemberProfileForm() {
       'What opportunities are you seeking?': values.opportunitiesSeeking?.trim() ?? '',
       'Causes close to your heart': values.passionateCauses?.trim() ?? '',
       'Do you currently own or operate a business?': values.ownsBusiness,
-      'Business name': values.ownsBusiness ? values.businessName?.trim() ?? '' : '',
-      'What do you offer?': values.ownsBusiness ? values.productsServices?.trim() ?? '' : '',
-      'Who do you love working with?': values.ownsBusiness ? values.idealClients?.trim() ?? '' : '',
+      ...(values.ownsBusiness ? {
+        ...(values.businessType ? { 'Is this a business or a nonprofit?': values.businessType } : {}),
+        ...(values.businessName?.trim() ? { 'Business name': values.businessName.trim() } : {}),
+        ...(values.businessDescription?.trim() ? { 'What is your business or nonprofit for?': values.businessDescription.trim() } : {}),
+        ...(values.productsServices?.trim() ? { 'What do you offer?': values.productsServices.trim() } : {}),
+        ...(values.idealClients?.trim() ? { 'Who do you love working with?': values.idealClients.trim() } : {}),
+      } : {}),
       'A value that guides you': values.guidingValue?.trim() ?? '',
       'One thing you’d like members to know about you': values.oneThingToKnow?.trim() ?? '',
       'Would you like to be contacted about opportunities?': values.contactForOpportunities,
@@ -243,6 +266,7 @@ function MemberProfileForm() {
               <InputField name="phone" label="Phone number" placeholder="(614) 555-0123" type="tel" register={register} />
               <InputField name="currentCity" label="Where are you based?" placeholder="Columbus, Ohio" register={register} />
               <InputField name="professionalProfile" label="Professional profile link" placeholder="LinkedIn or personal website" register={register} />
+              <InputField name="linkedinProfile" label="LinkedIn profile" placeholder="https://www.linkedin.com/in/your-name" type="url" register={register} errorMessage={errors.linkedinProfile?.message} />
             </div>
           </Section>
 
@@ -276,9 +300,9 @@ function MemberProfileForm() {
             </div>
           </Section>
 
-          <Section id="business" icon={<BriefcaseBusiness size={18} />} title="Business & entrepreneurship" description="If you’re building something of your own, we’d love to hear about it.">
+          <Section id="business" icon={<BriefcaseBusiness size={18} />} title="Business, nonprofit & entrepreneurship" description="If you’re building something of your own, we’d love to hear about it.">
             <div className="field">
-              <span className="field-label" id="owns-business-label">Do you currently own or operate a business?<span className="required" aria-hidden="true">*</span></span>
+              <span className="field-label" id="owns-business-label">Do you currently own or operate a business or nonprofit?<span className="required" aria-hidden="true">*</span></span>
               <div className="choice-row" role="radiogroup" aria-labelledby="owns-business-label">
                 <label className="choice-card"><input type="radio" value="true" required data-testid="radio-ownsBusiness-yes" {...register('ownsBusiness', { required: 'Please select an option' , setValueAs: (value) => value === 'true' })} />Yes, I do</label>
                 <label className="choice-card"><input type="radio" value="false" data-testid="radio-ownsBusiness-no" {...register('ownsBusiness', { required: 'Please select an option', setValueAs: (value) => value === 'true' })} />Not currently</label>
@@ -286,7 +310,17 @@ function MemberProfileForm() {
               {errors.ownsBusiness && <p className="error-text" role="alert">{errors.ownsBusiness.message}</p>}
             </div>
             {ownsBusiness && <div className="field-grid" style={{ marginTop: 20 }}>
-              <InputField name="businessName" label="Business name" placeholder="What’s it called?" register={register} />
+              <div className="field">
+                <label htmlFor="businessType">Is this a business or a nonprofit?</label>
+                <select id="businessType" data-testid="select-businessType" {...register('businessType')}>
+                  <option value="">Select one</option>
+                  <option value="Business">Business</option>
+                  <option value="Nonprofit">Nonprofit</option>
+                  <option value="Both">Both</option>
+                </select>
+              </div>
+              <InputField name="businessName" label="Name of your business or nonprofit" placeholder="What’s it called?" register={register} />
+              <TextField name="businessDescription" label="What is your business or nonprofit for?" placeholder="What do you do, and who do you serve?" register={register} />
               <TextField name="productsServices" label="What do you offer?" placeholder="Products, services, or the problem you help solve…" register={register} />
               <TextField name="idealClients" label="Who do you love working with?" placeholder="Tell us about your ideal clients or collaborators…" register={register} />
             </div>}

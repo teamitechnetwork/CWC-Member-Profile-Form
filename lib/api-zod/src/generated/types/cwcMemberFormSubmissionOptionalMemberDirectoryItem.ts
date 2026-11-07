@@ -16,9 +16,10 @@ export const CwcMemberFormSubmissionOptionalMemberDirectoryItem = {
   Industry: 'Industry',
   City: 'City',
   Professional_profile_link: 'Professional profile link',
+  LinkedIn_profile: 'LinkedIn profile',
   Professional_bio: 'Professional bio',
   Strengths: 'Strengths',
   Areas_of_expertise: 'Areas of expertise',
-  Business_name: 'Business name',
+  Business_or_nonprofit_name: 'Business or nonprofit name',
   Products_or_services: 'Products or services',
 } as const;

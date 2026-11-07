@@ -8,9 +8,11 @@
 
 export * from './apiError';
 export * from './cwcMemberFormSubmission';
+export * from './cwcMemberFormSubmissionIsThisABusinessOrANonprofit';
 export * from './cwcMemberFormSubmissionOptionalMemberDirectoryItem';
 export * from './healthStatus';
 export * from './memberProfileInput';
+export * from './memberProfileInputBusinessType';
 export * from './memberProfileInputDirectoryFieldsItem';
 export * from './memberProfileReceipt';
 export * from './memberSheetSuccess';

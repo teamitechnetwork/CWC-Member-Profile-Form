@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { CwcMemberFormSubmissionIsThisABusinessOrANonprofit } from './cwcMemberFormSubmissionIsThisABusinessOrANonprofit';
 import type { CwcMemberFormSubmissionOptionalMemberDirectoryItem } from './cwcMemberFormSubmissionOptionalMemberDirectoryItem';
 
 export interface CwcMemberFormSubmission {
@@ -23,6 +24,8 @@ export interface CwcMemberFormSubmission {
   'Where are you based?': string;
   /** @maxLength 500 */
   'Professional profile link': string;
+  /** @maxLength 500 */
+  'LinkedIn profile'?: string;
   /** @maxLength 200 */
   'Current role': string;
   /** @maxLength 200 */
@@ -64,18 +67,21 @@ export interface CwcMemberFormSubmission {
   /** @maxLength 2000 */
   'Causes close to your heart': string;
   'Do you currently own or operate a business?': boolean;
+  'Is this a business or a nonprofit?'?: CwcMemberFormSubmissionIsThisABusinessOrANonprofit;
   /** @maxLength 200 */
-  'Business name': string;
+  'Business name'?: string;
   /** @maxLength 3000 */
-  'What do you offer?': string;
+  'What is your business or nonprofit for?'?: string;
+  /** @maxLength 3000 */
+  'What do you offer?'?: string;
   /** @maxLength 2000 */
-  'Who do you love working with?': string;
+  'Who do you love working with?'?: string;
   /** @maxLength 1000 */
   'A value that guides you': string;
   /** @maxLength 1500 */
   'One thing you’d like members to know about you': string;
   'Would you like to be contacted about opportunities?': boolean;
-  /** @maxItems 11 */
+  /** @maxItems 12 */
   'Optional member directory': CwcMemberFormSubmissionOptionalMemberDirectoryItem[];
   /** @maxLength 3000 */
   'What are your expectations of CWC? What recommendations would you like to share?': string;

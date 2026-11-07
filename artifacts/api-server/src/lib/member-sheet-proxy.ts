@@ -75,7 +75,24 @@ export async function submitMemberToSheet(
 
   const fields = { ...submission };
   delete fields.secret;
-  const formFields = trimAndLimitValues(fields) as Record<string, unknown>;
+  const unchangedFields = new Set([
+    "LinkedIn profile",
+    "Is this a business or a nonprofit?",
+    "Business name",
+    "What is your business or nonprofit for?",
+  ]);
+  const formFields = Object.fromEntries(
+    Object.entries(fields)
+      .filter(
+        ([key, value]) =>
+          !unchangedFields.has(key) ||
+          !(typeof value === "string" && value.trim() === ""),
+      )
+      .map(([key, value]) => [
+        key,
+        unchangedFields.has(key) ? value : trimAndLimitValues(value),
+      ]),
+  ) as Record<string, unknown>;
 
   const fullName = formFields["Full name"];
   if (typeof fullName !== "string" || !fullName) {
