@@ -303,7 +303,11 @@ function MemberProfileForm() {
 
           {requestError && <div className="submit-error" role="alert" data-testid="status-submit-error">{requestError}</div>}
           <div className="submit-row">
-            <p className="submit-caption">Fields marked with <span className="required">*</span> are required. You can leave any other question blank.</p>
+            <p className="submit-caption">
+              Fields marked with <span className="required">*</span> are required. You can leave any other question blank.
+              <br />
+              Your profile is sent to CWC’s member records; directory sharing remains optional.
+            </p>
             <button className="submit-button" type="submit" disabled={mutation.isPending} data-testid="button-submit-profile">
               {mutation.isPending ? 'Sending your profile…' : 'Submit my profile'}{!mutation.isPending && <ArrowRight className="submit-arrow" size={18} aria-hidden="true" />}
             </button>
