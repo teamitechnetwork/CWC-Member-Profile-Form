@@ -1,3 +1,5 @@
+/// <reference lib="dom" />
+
 import { SubmitMemberBody } from "../lib/api-zod/src/generated/api";
 import { submitMemberToSheet } from "../artifacts/api-server/src/lib/member-sheet-proxy";
 
